@@ -1,15 +1,15 @@
-#include "TCircList.h"
-#include <stdlib.h>
+#include "Circ.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct _no {
+typedef struct _no{
     int info;
     struct _no *prox;
 }TNo;
 
 struct _list{
     TNo* fim;
-    TNo* inicio;
+
 };
 
 TNo* TNo_createNfill(int info){
@@ -23,13 +23,10 @@ TNo* TNo_createNfill(int info){
 
 TCircList* TCircList_create(){
     TCircList* nova = malloc(sizeof(TCircList));
-    
-    if (nova->fim != NULL)
+    if (nova != NULL)
         nova->fim = NULL;
-
     return nova;
 }
-
 bool TCircList_insert_end(TCircList* lista, int info){
     TNo* novo = TNo_createNfill(info);
     if  (novo == NULL)
@@ -70,47 +67,41 @@ void TCircList_print(TCircList* lista){
         putchar('\n');
     }
 }
-//TODO: Implementar esta função
-bool TCircList_try_to_delete(TCircList* lista, int info){
-    return false;
-}
-//TODO: Implementar esta função 
-void TCircList_free(TCircList* lista){
-    
-}
 
-void EDmundo(int numeroNo, int distancia){
-    if(numeroNo <= 0 || distancia <= 0)
-        return;
+void EDanca(){
 
-    TCircList* lista = TCircList_create();
+    TCircList* cadeiras = TCircList_create();
+    TCircList* Djay = TCircList_create();
 
-    for(int i = numeroNo; i >= 1; i--){ // Inserir do maior para o menor para manter ordem
-        if(!TCircList_insert_begin(lista, i))
-            printf("Erro ao inserir o elemento %d \n", i);
+    int qtd_cadeiras = 0;
+    int qtd_sec = 0;
+    scanf("%d",&qtd_cadeiras);
+    scanf("%d",&qtd_sec);
+
+    for(int i = 1 ; i <= qtd_cadeiras; i++ )
+        TCircList_insert_begin(cadeiras , i );
+    for(int i = 1 ; i <= qtd_sec ; i++){
+        int sec = 0;
+        scanf("%d",&sec);
+        TCircList_insert_begin(Djay , sec );
     }
-
-    TNo* atual = lista->inicio;
-    TNo* anterior = NULL;
-
-    while(atual != atual->prox){ // Enquanto houver mais de um nó
-        // Avança até o nó a ser removido
-        for(int i = 1; i < distancia; i++){
-            anterior = atual;
-            atual = atual->prox;
+    TNo* Djay_sec = Djay->fim->prox;
+    while(cadeiras->fim != cadeiras->fim->prox){
+        TNo* aux = cadeiras->fim->prox;
+        TNo* y = cadeiras->fim;
+        for(int i = 1 ; i <= Djay_sec->info ; i++ ){
+            aux = aux->prox;
+            y = y->prox;
         }
-        // Remove o nó atual
-        printf("Removendo: %d\n", atual->info);
-        anterior->prox = atual->prox;
-        if(atual == lista->inicio)
-            lista->inicio = atual->prox;
-        free(atual);
-        atual = anterior->prox;
-
-        TCircList_print(lista);
-        printf("\n");
+        
+        if(aux == cadeiras->fim)
+            cadeiras->fim = y;
+        y->prox = aux->prox;
+        Djay_sec = Djay_sec->prox;
+        free(aux);
     }
-    printf("Sobrevivente: %d\n", atual->info);
-    free(atual);
-    free(lista);
+    printf("sobrevicente foi %d ", cadeiras->fim->info);
 }
+
+
+

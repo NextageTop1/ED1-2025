@@ -1,4 +1,4 @@
-#include "TCircList.h"
+#include "Circ.h"
 #include <stdio.h>
 int main(){
     TCircList* lista = TCircList_create();
@@ -15,5 +15,6 @@ int main(){
     //TCircList_free(lista);
 
     //EDmundo(9 , 4);
+    EDanca();
     return 0;
 }
