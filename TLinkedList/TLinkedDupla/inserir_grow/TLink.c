@@ -89,7 +89,7 @@ bool InsertTLinkGrow(TLink* lista, int info){
     if(novo == NULL)
         return false;
 
-    if(lista->inicio == NULL){  // Lista vazia
+    if(lista->inicio == NULL){  
         lista->inicio = novo;
         lista->fim = novo;
         return true;
