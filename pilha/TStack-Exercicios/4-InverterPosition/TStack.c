@@ -2,8 +2,6 @@
 #include<stdlib.h>
 
 
-
-
 typedef struct _no{
     int info;
     struct _no *prox;
