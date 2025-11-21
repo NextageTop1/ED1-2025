@@ -1,20 +1,23 @@
 #include "Queue.h"
-#include<stdlib.h>
+#define MAX 5
+#include <stdlib.h>
 
-typedef struct _no {
-    int info;
-    struct _no *prox;
-}TNo;
 
 struct _queue{
-    TNo* end;
-    unsigned int qty;
+    unsigned int qty, head, tail;
+    int data[MAX];
 };
+/**
+ * Cria instâncias da fila;
+ * @return Queue* Ponteiro para uma fila válida 
+ * ou NULL caso não consiga memória para alocação
+ */
 Queue* Queue_create(){
     Queue* nova = malloc(sizeof(Queue));
-    if(nova!=NULL){
-        nova->end = NULL;
+    if(nova){
         nova->qty = 0;
+        nova->tail = 0;
+        nova->head = 0;
     }
     return nova;
 }
@@ -25,20 +28,10 @@ Queue* Queue_create(){
  * @return bool informando se a operação pode ser realizada.
  */
 bool Queue_enqueue(Queue* fila, int info){
-
-    if(fila == NULL) return false;
-
-    TNo* novo = malloc(sizeof(TNo));
-    if(novo == NULL) return false;
-    novo->info = info;
-    novo->prox = novo;
-    //fila nao esta vazia    
-    if(fila->end != NULL)
-    {
-        novo->prox = fila->end->prox;
-        fila->end->prox = novo;
-    }
-    fila->end = novo;
+    if(fila == NULL || Queue_is_full(fila))
+        return false;
+    fila->data[fila->tail] = info;
+    fila->tail = (fila->tail+1) % MAX;
     fila->qty++;
     return true;
 }
@@ -55,16 +48,12 @@ bool Queue_enqueue(Queue* fila, int info){
  *  printf("Nao foi possivel remover da fila (provavelmente está vazia)");
  */
 bool Queue_dequeue(Queue* fila, int* pinfo){
-    if(fila==NULL || Queue_is_empty(fila))
+    if(fila == NULL || Queue_is_empty(fila))
         return false;
-    TNo* oldBegin = fila->end->prox;
-    *pinfo = oldBegin->info;
-    fila->end->prox = oldBegin->prox;
-    free(oldBegin);
+    
+    *pinfo = fila->data[fila->head];
+    fila->head = (fila->head+1) % MAX;
     fila->qty--;
-    //Deletei o último?
-    if(fila->qty==0)
-        fila->end = NULL;
     return true;
 }
 /**
@@ -73,9 +62,10 @@ bool Queue_dequeue(Queue* fila, int* pinfo){
  * @return bool informando se está cheia.
  */
 bool Queue_is_full(Queue* fila){
-    //O correto seria fazer uma prereserva de memória!
-    //Conforme discutido em aula.
-    return false;
+    if(fila){
+        return fila->qty == MAX;
+    }
+    return true;
 }
 /**
  * Checa se a fila está vazia;
@@ -83,10 +73,10 @@ bool Queue_is_full(Queue* fila){
  * @return bool informando se está vazia.
  */
 bool Queue_is_empty(Queue* fila){
-    //Novamente cabe uma discussão aqui...
-    if(fila==NULL || fila->qty == 0) return true;
-
-    return false;
+    if(fila){
+        return fila->qty == 0;
+    }
+    return true;
 }
 /**
  * Retorna a quantidade de elementos atualmente na fila
@@ -94,7 +84,5 @@ bool Queue_is_empty(Queue* fila){
  * @return unsigned int : Quantidade de elementos presentes na fila.
  */
 unsigned int Queue_get_qty(Queue* fila){
-    if(fila)
-        return fila->qty;
-    return 0;
+    return (fila)? fila->qty : 0;
 }
