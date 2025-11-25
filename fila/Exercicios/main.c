@@ -110,9 +110,9 @@ int main(){
     // reverse(fila1);
 
     //Para ex 03
-    Queue* result = Queue_create();
-    fusao_em_ordem_cres(fila1, fila2, result);
-    print_queue(result);
+    // Queue* result = Queue_create();
+    // fusao_em_ordem_cres(fila1, fila2, result);
+    // print_queue(result);
     Queue* concataneda = Concatenado(fila1 , fila2);
     print_queue(concataneda);
 
